@@ -27,9 +27,9 @@ namespace SimulacaoEmprestimoFGTS.Core.Services
         public IEnumerable<RepasseFGTSDto> GetRepasses(decimal saldo, int parcelas, DateTime dataAniversario)
         {
             var repasses = new List<RepasseFGTS>();
-            for (int i = 1; i <= parcelas; i++)
+            for (int i = 0; i < parcelas; i++)
             {
-                DateTime dataVencimento = CalculaDataVencimento(dataAniversario);
+                DateTime dataVencimento = CalculaDataVencimento(dataAniversario, DateTime.Now);
                 var aliquota = GetAliquotaFGTS(saldo);
                 var repasse = CalculaRepasse(aliquota, saldo, dataVencimento.AddYears(i));
                 saldo = CalculaSaldoRestante(saldo, repasse);
@@ -39,9 +39,9 @@ namespace SimulacaoEmprestimoFGTS.Core.Services
             return repasses.Select(x =>_mapper.Map<RepasseFGTSDto>(x));
         }
 
-        private DateTime CalculaDataVencimento(DateTime dataAniversario)
+        private DateTime CalculaDataVencimento(DateTime dataAniversario, DateTime dataSimulacao)
         {
-            if(dataAniversario > DateTime.Now)
+            if(dataAniversario.Month > dataSimulacao.Month)
                 return new DateTime(DateTime.Now.Year, dataAniversario.Month, 1);
             else
                 return new DateTime(DateTime.Now.Year+1, dataAniversario.Month, 1);
@@ -52,10 +52,10 @@ namespace SimulacaoEmprestimoFGTS.Core.Services
             var simulacoes = new List<SimulacaoFGTS>();
             for (int i = 0; i < parcelas; i++)
             {
-                DateTime dataVencimento = CalculaDataVencimento(dataAniversario).AddYears(i);
+                DateTime dataVencimento = CalculaDataVencimento(dataAniversario,dataSimulacao).AddYears(i);
                 var dias = Math.Abs(dataSimulacao.Subtract(dataVencimento).Days);
                 var aliquota = GetAliquotaFGTS(saldo);
-                var repasse = CalculaRepasse(aliquota, saldo, dataVencimento.AddYears(i));
+                var repasse = CalculaRepasse(aliquota, saldo, dataVencimento);
                 var taxaJuros = CalculaTaxaOperacao(_conversorTaxa.MensalToDiaria(taxaMensal),dias );
                 var principal = Math.Round(CalculaPrincipal(repasse.ValorParcela, taxaJuros),2);
                 var juros = CalculaJuros(repasse.ValorParcela, principal);

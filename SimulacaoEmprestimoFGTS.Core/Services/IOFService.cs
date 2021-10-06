@@ -19,7 +19,7 @@ namespace SimulacaoEmprestimoFGTS.Core.Services
         {
             _aliquotaIOF = AliquotaIOF.GetAliquotaIOF(dataSimulacao);
             var aliquota = _aliquotaIOF.Mensal * dias;
-            return aliquota >= _aliquotaIOF.Anual ? _aliquotaIOF.Mensal : aliquota;
+            return aliquota >= _aliquotaIOF.Anual ? _aliquotaIOF.Anual : aliquota;
         }
     }
 }

@@ -41,15 +41,18 @@ namespace SimulacaoEmprestimoFGTS.Core.Services
 
         private DateTime CalculaDataVencimento(DateTime dataAniversario)
         {
-            return new DateTime(DateTime.Now.Year, dataAniversario.Month, 1);
+            if(dataAniversario > DateTime.Now)
+                return new DateTime(DateTime.Now.Year, dataAniversario.Month, 1);
+            else
+                return new DateTime(DateTime.Now.Year+1, dataAniversario.Month, 1);
         }
 
         public IEnumerable<SimulacaoFGTSDto> GetSimulacaoFGTS(decimal saldo, int parcelas, DateTime dataAniversario, double taxaMensal, DateTime dataSimulacao)
         {
             var simulacoes = new List<SimulacaoFGTS>();
-            for (int i = 1; i <= parcelas; i++)
+            for (int i = 0; i < parcelas; i++)
             {
-                DateTime dataVencimento = CalculaDataVencimento(dataAniversario);
+                DateTime dataVencimento = CalculaDataVencimento(dataAniversario).AddYears(i);
                 var dias = Math.Abs(dataSimulacao.Subtract(dataVencimento).Days);
                 var aliquota = GetAliquotaFGTS(saldo);
                 var repasse = CalculaRepasse(aliquota, saldo, dataVencimento.AddYears(i));

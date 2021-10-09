@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SimulacaoEmprestimoFGTS.Api.Contract;
 using SimulacaoEmprestimoFGTS.Core.Dto;
+using SimulacaoEmprestimoFGTS.Core.Dto.FGTS;
 using SimulacaoEmprestimoFGTS.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,21 +25,57 @@ namespace SimulacaoEmprestimoFGTS.Api.Controllers
             _logger = logger;
         }
 
-        [Route("GetRepasses")]
+        [Route("Repasses")]
         [HttpGet]
-        public IActionResult GetRepassesFGTS(decimal saldo, int parcelas, DateTime dataAniversario)
+        public ActionResult<IEnumerable<RepasseFGTSDto>> GetRepassesFGTS(decimal saldo, int parcelas, DateTime dataAniversario)
         {
-            _logger.LogInformation($"Repasse utilizando os valores - Saldo:{saldo}, Parcelas:{parcelas}, DataAniversario:{dataAniversario}");
-            var repasses = _service.GetRepasses(saldo, parcelas, dataAniversario);
-            return Ok(repasses);
+            try
+            {
+                _logger.LogInformation($"Repasse utilizando os valores - Saldo:{saldo}, Parcelas:{parcelas}, DataAniversario:{dataAniversario}");
+                var repasses = _service.GetRepasses(saldo, parcelas, dataAniversario);
+                return Ok(repasses);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao calcular repasses: {ex.Message}");
+                return BadRequest("Erro ao calcular repasses");
+            }
         }
-        [Route("GetSimulacao")]
+        
+        [Route("SimulacaoResumo")]
         [HttpGet]
-        public IActionResult GetSimulacaoFGTS(decimal saldo, int parcelas, DateTime dataAniversario, double taxaMensal, DateTime dataSimulacao)
+        public ActionResult<ResumoFGTSDto> GetResumoSimulacaoFGTS(decimal saldo, int parcelas, DateTime dataAniversario, double taxaMensal, DateTime dataSimulacao)
         {
-            _logger.LogInformation($"Simulação utilizando os valores - Saldo:{saldo}, Parcelas:{parcelas}, DataAniversario:{dataAniversario}, Taxa Mensal:{taxaMensal}, Data Simulação:{dataSimulacao}");
-            var simulacoes = _service.GetSimulacaoFGTS(saldo, parcelas, dataAniversario, taxaMensal, dataSimulacao);
-            return Ok(simulacoes);
+            try
+            {
+                _logger.LogInformation($"Resumo simulação utilizando os valores - Saldo:{saldo}, Parcelas:{parcelas}, DataAniversario:{dataAniversario}, Taxa Mensal:{taxaMensal}, Data Simulação:{dataSimulacao}");
+                var resumo = _service.GetSimulacaoResumoFGTS(saldo, parcelas, dataAniversario, taxaMensal, dataSimulacao);
+                return Ok(resumo);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError($"Erro ao calcular resumo simulação FGTS: {ex.Message}");
+                return BadRequest("Erro ao calcular resumo simulação FGTS");
+            }
+        }
+
+        [Route("SimulacaoDetalhada")]
+        [HttpGet]
+        public ActionResult<IEnumerable<SimulacaoFGTSDto>> GetSimulacaoFGTS(decimal saldo, int parcelas, DateTime dataAniversario, double taxaMensal, DateTime dataSimulacao)
+        {
+            try
+            {
+                _logger.LogInformation($"Detalhamento simulação utilizando os valores - Saldo:{saldo}, Parcelas:{parcelas}, DataAniversario:{dataAniversario}, Taxa Mensal:{taxaMensal}, Data Simulação:{dataSimulacao}");
+                var simulacoes = _service.GetSimulacaoFGTS(saldo, parcelas, dataAniversario, taxaMensal, dataSimulacao);
+                return Ok(simulacoes);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError($"Erro ao calcular simulação FGTS: {ex.Message}");
+                return BadRequest("Erro ao calcular simulação FGTS");
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SimulacaoEmprestimoFGTS.Domain.Model
+namespace SimulacaoEmprestimoFGTS.Domain.Model.FGTS
 {
     public class AliquotaFGTS
     {

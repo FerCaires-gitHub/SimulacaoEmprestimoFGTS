@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SimulacaoEmprestimoFGTS.Core.Interfaces;
 using SimulacaoEmprestimoFGTS.Domain.Model;
+using SimulacaoEmprestimoFGTS.Domain.Model.IOF;
 using System;
 using System.Collections.Generic;
 using System.Text;

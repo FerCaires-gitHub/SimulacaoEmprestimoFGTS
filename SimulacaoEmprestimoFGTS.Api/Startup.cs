@@ -29,7 +29,7 @@ namespace SimulacaoEmprestimoFGTS.Api
             DependencyContainer.RegisterServices(services);
             services.AddSwaggerGen(swagger =>
             {
-                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "SimulacaoEmprestimoFGTS" });
+                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "SimulacaoEmprestimo" });
                 swagger.DescribeAllParametersInCamelCase();
             });
         }
@@ -46,7 +46,7 @@ namespace SimulacaoEmprestimoFGTS.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimulacaoEmprestimoFGTS");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimulacaoEmprestimo");
 
             });
 

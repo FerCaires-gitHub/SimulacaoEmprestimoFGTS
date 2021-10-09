@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SimulacaoEmprestimoFGTS.Domain.Model
+namespace SimulacaoEmprestimoFGTS.Core.Dto.FGTS
 {
-    public class SimulacaoFGTS
+    public class SimulacaoFGTSDto
     {
-        public RepasseFGTS Repasse { get; set; }
+        public decimal ValorRepasseFGTS { get; set; }
+        public DateTime DataVencimento { get; set; }
         public decimal Principal { get; set; }
         public decimal Juros { get; set; }
         public decimal IOF { get; set; }
